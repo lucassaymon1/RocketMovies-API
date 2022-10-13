@@ -4,6 +4,7 @@ const AppError = require("../utils/AppError")
 // criar classe para distribuir melhor funções do controller
 class UsersController{
 
+  // create an user
   async create(request, response){
     const {name, email, password} = request.body
 

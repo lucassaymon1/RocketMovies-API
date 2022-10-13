@@ -5,6 +5,7 @@ const routes = Router()
 const usersRouter = require("./users.routes")
 const moviesRouter = require("./movies.routes")
 
+// methods to map and call the routes
 routes.use("/users", usersRouter)
 routes.use("/movies", moviesRouter)
 

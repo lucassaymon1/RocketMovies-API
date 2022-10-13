@@ -3,13 +3,16 @@ const knex = require("../database/knex")
 
 class MoviesController{
 
+  // create a movie note
   async create(request, response){
     const {title, description, rating, tags} = request.body
     const {user_id} = request.params
 
-
     if(!title){
       throw new AppError("O título do filme é obrigatório para criar uma nota!")
+    }
+    if(rating < 0 || rating > 5){
+      throw new AppError("A sua nota para o filme deve ser um valor de 0 a 5!")
     }
 
     const id = await knex("movie_notes").insert({
@@ -23,6 +26,7 @@ class MoviesController{
     response.json({title, description, rating, tags})
   }
 
+  // show a specific registered movie note
   async show(request, response){
     const {id} = request.params
 
