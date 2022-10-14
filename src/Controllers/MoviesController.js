@@ -38,8 +38,47 @@ class MoviesController{
 
     return response.json({
       ...note,
-      "Usuário": `${username}`
+      "Nota do usuário": `${username}`
     })
+  }
+
+  async index(request, response){
+    const {title, user_id} = request.query
+
+    const user = await knex("users").where({id: user_id}).first()
+    const username = user.name
+    const user_notes = await knex("movie_notes").where({user_id}).whereIn("title").orderBy("title")
+
+    return response.json(user_notes)
+  }
+
+  async update(request, response){
+    const {id} = request.params
+    const {title, description, rating, tags} = request.body
+
+    if(rating < 0 || rating > 5){
+      throw new AppError("A sua nota para o filme deve ser um valor de 0 a 5!")
+    }
+    
+    const updatedNote = await knex("movie_notes").where({id}).update({
+      title: title,
+      description: description,
+      rating: rating,
+      tags: tags
+    })
+
+    return response.json({
+      ...updatedNote,
+      "mensagem": "Nota Atualizada!"
+    })
+  }
+
+  async delete(request, response){
+    const {id} = request.params
+
+    await knex("movie_notes").where({id}).delete()
+
+    return response.json()
   }
 
 }

@@ -20,7 +20,34 @@ class UsersController{
 
     // mandar as informações em formato json({})
     response.json({name, email, password})
+
   }
+  async index(request, response){
+    const {id} = request.params
+
+    const user = await knex("users").where({id}).first()
+    const username = user.name
+    const user_notes = await knex("movie_notes").where({user_id: id})
+
+    return response.json({
+      "Notas do usuário": `${username}`,
+      ...user_notes
+    })
+  }
+
+  async update(request, response){
+    const {id} = request.params
+    const {name, email, password} = request.body
+
+    const updatedUser = await knex("users").where({id}).update({
+      name: name,
+      email: email,
+      password: password
+    })
+
+    return response.json(updatedUser)
+  }
+  
 }
 
 module.exports = UsersController

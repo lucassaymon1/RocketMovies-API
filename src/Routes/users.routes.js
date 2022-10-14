@@ -12,5 +12,8 @@ const usersController = new UsersController()
 
 // chamar a tarefa create dentro do controller
 usersRoutes.post("/", usersController.create)
+usersRoutes.get("/:id", usersController.index)
+usersRoutes.put("/:id", usersController.update)
+usersRoutes.delete("/:id", usersController.delete)
 
 module.exports = usersRoutes
