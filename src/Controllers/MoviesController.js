@@ -77,7 +77,7 @@ class MoviesController{
     const {id} = request.params
 
     await knex("movie_notes").where({id}).delete()
-
+    
     return response.json()
   }
 
