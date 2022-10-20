@@ -1,3 +1,4 @@
+const {validateEmail, verifyEmail} = require("./ControllerFunctions") 
 const knex = require("../database/knex")
 const AppError = require("../utils/AppError")
 
@@ -14,6 +15,9 @@ class UsersController{
     if(!name){
       throw new AppError("O nome do usuário é obrigatório")
     }
+
+    validateEmail(email)
+    await verifyEmail(email, null)
 
     // função para criptografar senhas (senha, complexidade da criptografia)
     const hashedPassword  = await hash(password, 8)
@@ -46,11 +50,9 @@ class UsersController{
     const {name, email, old_password, password} = request.body
 
     const user = await knex("users").where({id}).first()
-    const emailExists = await knex("users").where({email}).first()
 
-    if(emailExists && emailExists.id ==! id){
-      throw new AppError("Este email já está em uso!")
-    }
+    validateEmail(email)
+    await verifyEmail(email, id)
 
     // se name não possui valor, usa user.name
     user.name = name ?? user.name
