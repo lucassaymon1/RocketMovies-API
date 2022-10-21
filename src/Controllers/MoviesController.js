@@ -74,7 +74,6 @@ class MoviesController{
       title: title,
       description: description,
       rating: rating,
-      tags: tags
     })
 
     return response.json({
@@ -85,6 +84,12 @@ class MoviesController{
 
   async delete(request, response){
     const {id} = request.params
+
+    const movie_note = await knex("movie_notes").where({id}).first()
+
+    if(!movie_note){
+      throw new AppError("A nota de filme em questão não foi encontrada")
+    }
 
     await knex("movie_notes").where({id}).delete()
     
